@@ -1,0 +1,164 @@
+[
+  {
+    "model": "core.leavetype",
+    "pk": 1,
+    "fields": {
+      "name": "Casual Leave",
+      "description": "Regular casual leave for personal reasons",
+      "color": "#3498db",
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.leavetype",
+    "pk": 2,
+    "fields": {
+      "name": "Maternity Leave",
+      "description": "Maternity leave for female students",
+      "color": "#e74c3c",
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.leavetype",
+    "pk": 3,
+    "fields": {
+      "name": "Paternity Leave",
+      "description": "Paternity leave for male students",
+      "color": "#f39c12",
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.leavetype",
+    "pk": 4,
+    "fields": {
+      "name": "Sick Leave",
+      "description": "Medical or illness related leave",
+      "color": "#e67e22",
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.leavetype",
+    "pk": 5,
+    "fields": {
+      "name": "Special Leave",
+      "description": "Special leave to attend seminar/conference",
+      "color": "#27ae60",
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.leavetype",
+    "pk": 6,
+    "fields": {
+      "name": "Vacation Leave",
+      "description": "Winter/summer vacation in their 1st year",
+      "color": "#9b59b6",
+      "is_active": true,
+      "created_at": "2026-06-29T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.programmeleavepolicy",
+    "pk": 1,
+    "fields": {
+      "programme": "MTech",
+      "leave_type": 1,
+      "days_allowed": 30,
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z",
+      "updated_at": "2026-06-29T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.programmeleavepolicy",
+    "pk": 2,
+    "fields": {
+      "programme": "MTech",
+      "leave_type": 5,
+      "days_allowed": 5,
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z",
+      "updated_at": "2026-06-29T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.programmeleavepolicy",
+    "pk": 3,
+    "fields": {
+      "programme": "MTech",
+      "leave_type": 6,
+      "days_allowed": 15,
+      "is_active": true,
+      "created_at": "2026-06-29T00:00:00Z",
+      "updated_at": "2026-06-29T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.programmeleavepolicy",
+    "pk": 4,
+    "fields": {
+      "programme": "PhD",
+      "leave_type": 1,
+      "days_allowed": 30,
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z",
+      "updated_at": "2026-06-29T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.programmeleavepolicy",
+    "pk": 5,
+    "fields": {
+      "programme": "PhD",
+      "leave_type": 4,
+      "days_allowed": 10,
+      "is_active": true,
+      "created_at": "2026-06-29T00:00:00Z",
+      "updated_at": "2026-06-29T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.programmeleavepolicy",
+    "pk": 6,
+    "fields": {
+      "programme": "PhD",
+      "leave_type": 2,
+      "days_allowed": 180,
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z",
+      "updated_at": "2026-06-29T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.programmeleavepolicy",
+    "pk": 7,
+    "fields": {
+      "programme": "PhD",
+      "leave_type": 3,
+      "days_allowed": 15,
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z",
+      "updated_at": "2026-06-29T00:00:00Z"
+    }
+  },
+  {
+    "model": "core.programmeleavepolicy",
+    "pk": 8,
+    "fields": {
+      "programme": "PhD",
+      "leave_type": 5,
+      "days_allowed": 30,
+      "is_active": true,
+      "created_at": "2026-04-27T00:00:00Z",
+      "updated_at": "2026-04-27T00:00:00Z"
+    }
+  }
+]

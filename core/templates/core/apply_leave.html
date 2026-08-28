@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Apply Leave</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        <h2>Leave Application</h2>
+
+        {% if messages %}
+            <div>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
+        <form method="post" class="mt-3">
+                        {% csrf_token %}
+                        {{ form.leave_type.label_tag }} {{ form.leave_type }}
+                        <div id="leave-remaining-info" class="mt-1 mb-2"></div>
+                        {{ form.from_date.label_tag }} {{ form.from_date }}<br>
+                        {{ form.to_date.label_tag }} {{ form.to_date }}<br>
+                        {{ form.purpose.label_tag }} {{ form.purpose }}<br>
+                        {{ form.place_of_visit.label_tag }} {{ form.place_of_visit }}<br>
+                        <div class="mb-3">
+                                <label class="form-label"><b>(One of the following to be ticked)</b></label>
+                                {% for radio in form.stipend_status %}
+                                    <div class="form-check">
+                                        {{ radio.tag }} <label class="form-check-label" style="font-weight:bold">{{ radio.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                        </div>
+                        {{ form.faculty_advisor.label_tag }} {{ form.faculty_advisor }}
+                        <div class="my-2 fw-bold text-muted" style="margin-left: 2px;">OR</div>
+                        {{ form.thesis_supervisor.label_tag }} {{ form.thesis_supervisor }}<br>
+                        <button type="submit" class="btn btn-success mt-2">Submit</button>
+                        <a href="{% url 'core:home' %}" class="btn btn-secondary ms-2 mt-2">Cancel</a>
+        </form>
+        <script>
+            // Map of leave type id to remaining days
+            const leaveTypeRemaining = {{ leave_type_remaining|safe }};
+            const select = document.getElementById('id_leave_type');
+            const infoDiv = document.getElementById('leave-remaining-info');
+            function updateLeaveInfo() {
+                const val = select.value;
+                if (val && leaveTypeRemaining[val] !== undefined) {
+                    infoDiv.innerHTML = `<span class="badge bg-info text-dark fs-6">Leave remaining for this type: <b>${leaveTypeRemaining[val]}</b> days</span>`;
+                } else {
+                    infoDiv.innerHTML = '';
+                }
+            }
+            if (select) {
+                select.addEventListener('change', updateLeaveInfo);
+                updateLeaveInfo();
+            }
+
+            // Faculty Advisor / Thesis Supervisor toggle
+            const faSelect = document.getElementById('id_faculty_advisor');
+            const tsSelect = document.getElementById('id_thesis_supervisor');
+            
+            function toggleAdvisors() {
+                if (faSelect.value) {
+                    tsSelect.disabled = true;
+                    tsSelect.value = '';
+                } else {
+                    tsSelect.disabled = false;
+                }
+                
+                if (tsSelect.value) {
+                    faSelect.disabled = true;
+                    faSelect.value = '';
+                } else {
+                    faSelect.disabled = false;
+                }
+            }
+            
+            if (faSelect && tsSelect) {
+                faSelect.addEventListener('change', toggleAdvisors);
+                tsSelect.addEventListener('change', toggleAdvisors);
+                // We also need to remove disabled attribute on form submit
+                // otherwise the disabled field won't be sent, which is fine since it's empty,
+                // but some backend validation might complain if it expects the field in POST.
+                // Since they are not required, it's fine.
+                toggleAdvisors(); // set initial state
+            }
+        </script>
+    </div>
+</body>
+</html>

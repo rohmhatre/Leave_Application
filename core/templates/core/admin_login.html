@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+</head>
+<body>
+    <h1>Admin Login</h1>
+    {% if messages %}
+        <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label>User ID: <input type="text" name="roll_number"></label><br>
+        <label>Password: <input type="password" name="password"></label><br>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>
