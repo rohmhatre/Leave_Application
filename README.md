@@ -46,15 +46,13 @@ python manage.py migrate
 > This keeps your database schema in sync with the code.
 
 ### 3. Create Initial Admin User
-- The application **automatically creates** a superuser on first load:
-  - **Roll Number**: `ADMIN`
-  - **Password**: `25m0005@iitb`
-- To recreate manually:
-  ```bash
-  python manage.py shell
-  from core.models import Student
-  Student.objects.create_superuser(roll_number='ADMIN', username='ADMIN', email='admin@iitb.ac.in', password='25m0005@iitb')
-  ```
+Create a admin superuser using the command
+
+```bash
+python manage.py createsuperuser
+```
+
+Follow the prompts for a succesful setup.
 
 ### 4. Import Students from Excel
 Prepare an Excel file with columns: `NAME` and `Roll Number`
