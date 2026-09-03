@@ -17,7 +17,7 @@ A comprehensive Django-based leave management portal with student and admin inte
 
 ### Admin Features
 - **Student Management**: View, update, and remove student records from the database
-- **Excel Import**: Bulk import students from Excel with auto-deduplication
+- **CSV Import**: Bulk import students from CSV, creating new students and updating existing ones
 - **Leave Application Review**: View all pending applications with student details and duration
 - **Approval/Rejection Workflow**: Approve or reject applications with automatic balance deduction
 - **Leave Policy Control**: Set default total leave allotment for all students globally
@@ -56,18 +56,30 @@ python manage.py migrate
   Student.objects.create_superuser(roll_number='ADMIN', username='ADMIN', email='admin@iitb.ac.in', password='25m0005@iitb')
   ```
 
-### 4. Import Students from Excel
-Prepare an Excel file with columns: `NAME` and `Roll Number`
+### 4. Import Students from CSV
+Prepare a CSV file with the columns: `roll_number`, `name`, `academic_unit`,
+`academic_programme`, `discipline`, `specialization`
 
 ```bash
-python manage.py import_students path/to/students.xlsx
+python manage.py import_students path/to/students.csv
 ```
 
-Each student will have:
+You can use the `core/tests/dummy_students.csv` as a reference to create your own upload file.
+
+Each new student will have:
 - **Initial Password**: Equal to their roll number
 - **Leave Balance**: 15 days (default, customizable from admin panel)
 
-> **Note**: Re-running the import only adds new students; existing records remain unchanged.
+> **Note**: Re-running the import updates existing students from the file and creates any
+> new ones. Passwords and leave balances of existing students are left untouched, and blank
+> cells never overwrite a value already on record.
+
+> **Note**: Rows without a roll number are ignored. Rows with more cells than the header —
+> usually an unquoted comma — are skipped and their line numbers reported. Any other error
+> rolls the whole import back, so a file is either imported in full or not at all.
+
+The same import is available to admins in the browser, from the **Update Student Details
+from CSV** button on the admin panel.
 
 ### 5. Run Development Server
 ```bash
@@ -95,7 +107,7 @@ Open: `http://localhost:8000/`
 1. **Student Management Tab**:
    - View all students with their details
    - See leaves taken (approved days only)
-   - Import/update students from Excel
+   - Import/update students from CSV
    - Remove students from system
 
 2. **Leave Applications Tab**:
@@ -167,7 +179,7 @@ Leave_Application/
 │   ├── urls.py                   # URL routing
 │   ├── forms.py                  # ProfileForm, LeaveForm
 │   ├── management/commands/
-│   │   └── import_students.py    # Excel import command
+│   │   └── import_students.py    # CSV import command
 │   └── templates/core/
 │       ├── landing.html          # Login page
 │       ├── home.html             # Student dashboard
@@ -262,7 +274,7 @@ with open('approved_leaves.csv', 'w') as f:
 | "no such column: core_student.leave_balance" | Run `makemigrations && migrate` |
 | Admin user not created | Delete db.sqlite3 and migrate again |
 | Students can't log in | Ensure `username` field is set (import command handles this) |
-| Excel import fails | Verify columns are named exactly: `NAME`, `Roll Number` |
+| CSV import reports 0 students | Verify the header row is named exactly: `roll_number`, `name` |
 | Template syntax errors | Ensure spaces around `==` in if statements (e.g., `{% if app.status == 'P' %}`) |
 
 ---

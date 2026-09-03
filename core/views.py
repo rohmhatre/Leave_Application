@@ -1,6 +1,3 @@
-
-
-# ================= IMPORTS (move all to top) =================
 from django.views.decorators.http import require_POST
 from django.db import models
 from django.db.models import ProtectedError
@@ -12,6 +9,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.urls import reverse
 from .models import LeaveApplication, Student, LeaveType, ProgrammeLeavePolicy, ApproverConfig, BackupConfig, StudentLeaveAdjustment
+from .importers import import_students_from_csv
 from django import forms
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, FileResponse
@@ -20,8 +18,11 @@ from django.utils import timezone
 import subprocess
 import os
 import json
+import logging
 from io import BytesIO
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 # Utility function to check if user is admin
 def is_admin(user):
@@ -1021,69 +1022,38 @@ def save_approver_config(request):
 
 @login_required
 @user_passes_test(is_admin)
-def update_students_from_excel(request):
-    """Allow admin to upload Excel file to update student details."""
+def update_students_from_csv(request):
+    """Allow admin to upload a CSV file to update student details."""
     if request.method == 'POST':
-        excel_file = request.FILES.get('excel_file')
-        if not excel_file:
+        csv_file = request.FILES.get('csv_file')
+        if not csv_file:
             messages.error(request, 'No file uploaded')
             return redirect('core:admin_panel')
         
         try:
-            import pandas as pd
-            df = pd.read_excel(excel_file)
-            updated_count = 0
-            created_count = 0
-            
-            for idx, row in df.iterrows():
-                roll = row.get('Roll Number') or row.get('Roll') or ''
-                if not roll:
-                    continue
-                
-                name = row.get('NAME') or ''
-                academic_unit = row.get('Academic Unit', '')
-                academic_programme = row.get('Academic Programme', '')
-                discipline = row.get('Discipline', '')
-                specialization = row.get('Specialization', '')
-                
-                first_name = ''
-                last_name = ''
-                parts = str(name).split()
-                if parts:
-                    first_name = parts[0]
-                    if len(parts) > 1:
-                        last_name = ' '.join(parts[1:])
-                
-                student, created = Student.objects.get_or_create(
-                    roll_number=roll,
-                    defaults={'username': roll}
-                )
-                if created:
-                    student.first_name = first_name
-                    student.last_name = last_name
-                    student.set_password(roll)
-                    created_count += 1
-                else:
-                    # ensure username is set for existing students
-                    if not student.username:
-                        student.username = roll
-                    updated_count += 1
-                
-                # update these fields regardless
-                student.first_name = first_name or student.first_name
-                student.last_name = last_name or student.last_name
-                student.academic_unit = academic_unit or student.academic_unit
-                student.academic_programme = academic_programme or student.academic_programme
-                student.discipline = discipline or student.discipline
-                student.specialization = specialization or student.specialization
-                student.save()
-            
-            msg = f'Updated {updated_count} students, created {created_count} new students.'
+            result = import_students_from_csv(csv_file)
+            skipped = result.skipped_lines
+
+            msg = f'Updated {result.updated} students, created {result.created} new students.'
             messages.success(request, msg)
+            if skipped:
+                all_lines = ', '.join(str(n) for n in skipped)
+                logger.warning(
+                    f'Skipped {len(skipped)} malformed row(s) in '
+                    f'{csv_file.name!r}: line(s) {all_lines}'
+                )
+                shown = ', '.join(str(n) for n in skipped[:10])
+                more = f' and {len(skipped) - 10} more' if len(skipped) > 10 else ''
+                messages.warning(
+                    request,
+                    f'Skipped {len(skipped)} malformed row(s) with too many '
+                    f'columns: line {shown}{more}.'
+                )
         except Exception as e:
+            logger.exception(f'Failed to import students from file: {csv_file.name}')
             messages.error(request, f'Error processing file: {str(e)}')
         
-        return redirect('core:admin_panel')
+    return redirect('core:admin_panel')
 
 
 @login_required

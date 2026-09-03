@@ -24,7 +24,7 @@
         <div class="d-flex justify-content-between mb-4">
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateStudentsModal">
-                Update Student Details from Excel
+                Update Student Details from CSV
             </button>
             
             <!-- Admin Actions -->
@@ -39,16 +39,16 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="updateStudentsModalLabel">Update Student Details from Excel</h5>
+                <h5 class="modal-title" id="updateStudentsModalLabel">Update Student Details from CSV</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <form method="post" action="{% url 'core:update_students' %}" enctype="multipart/form-data">
                 <div class="modal-body">
-                    <p class="text-muted">Upload an Excel file to update student information. Existing passwords and applications will be preserved.</p>
+                    <p class="text-muted">Upload a CSV file to update student information. Existing passwords and applications will be preserved.</p>
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label class="form-label">Select Excel file (NAME, Roll Number columns):</label>
-                        <input type="file" class="form-control" name="excel_file" accept=".xlsx,.xls" required>
+                        <label class="form-label">Select CSV file (columns: roll_number, name, academic_unit, academic_programme, discipline, specialization):</label>
+                        <input type="file" class="form-control" name="csv_file" accept=".csv" required>
                     </div>
                 </div>
                 <div class="modal-footer">

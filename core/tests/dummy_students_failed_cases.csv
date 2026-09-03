@@ -1,0 +1,9 @@
+roll_number,name,academic_unit,academic_programme,discipline,specialization
+,No Roll Here,School of Engineering,B.Tech,Computer Science,AI
+   ,Blank Roll,School of Engineering,B.Tech,Computer Science,AI
+
+2023CSE022,Long Row,,,,,extra,cells
+2023CSE025,Rhea Kapoor,School of Engineering, Main Campus,B.Tech,Computer Science,AI
+2023CSE028,Trailing Commas,,,,,,,
+2023CSE029,Bad One,School of Engineering, Main Campus,B.Tech,CS,AI
+2023CSE031,Bad Two,School of Sciences, North Wing,Ph.D.,Physics,Optics
