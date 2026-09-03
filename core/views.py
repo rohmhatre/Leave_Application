@@ -1022,10 +1022,10 @@ def save_approver_config(request):
 
 @login_required
 @user_passes_test(is_admin)
-def update_students_from_excel(request):
+def update_students_from_csv(request):
     """Allow admin to upload a CSV file to update student details."""
     if request.method == 'POST':
-        csv_file = request.FILES.get('excel_file')
+        csv_file = request.FILES.get('csv_file')
         if not csv_file:
             messages.error(request, 'No file uploaded')
             return redirect('core:admin_panel')

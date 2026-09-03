@@ -1,4 +1,4 @@
-"""Tests for the student bulk-upload view (``update_students_from_excel``).
+"""Tests for the student bulk-upload view (``update_students_from_csv``).
 
 The view now reads a CSV file (it used to read XLSX via pandas), so these
 tests focus on CSV parsing behaviour and on the failure paths.
@@ -44,7 +44,7 @@ class UpdateStudentsFromCSVTests(TestCase):
         if isinstance(content, str):
             content = content.encode('utf-8')
         upload = SimpleUploadedFile(filename, content, content_type='text/csv')
-        return self.client.post(self.url, {'excel_file': upload})
+        return self.client.post(self.url, {'csv_file': upload})
 
     def post_dummy_csv(self):
         with open(DUMMY_CSV, 'rb') as fh:
